@@ -59,7 +59,7 @@ _darcs
 /snippet
 
 # HADM
-pretrained_models/*
+pretrained_models
 outputs/
 scc_jobs/
 cache/

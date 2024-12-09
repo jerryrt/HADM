@@ -292,4 +292,3 @@ If you find this work useful, please consider citing:
 
 ## Acknowledgment
 Our codebase is heavily borrowed from [EVA-02-det](https://github.com/baaivision/EVA/tree/master/EVA-02/det) and [Detectron2](https://github.com/facebookresearch/detectron2).
->>>>>>> master
