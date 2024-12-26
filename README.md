@@ -97,7 +97,7 @@ Also make sure to place the pretrained weights under the `pretrained_models` dir
 
 ## Demo
 
-Please note that our models take JPEG images as input, so make sure to make the necessary conversions.
+***Please note that our models take JPEG images as input, so make sure to make the necessary conversions.***
 
 ### Local Human Artifact Detection Model (HADM-L)
 
