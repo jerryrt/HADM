@@ -67,3 +67,7 @@ make_*.py
 demo/outputs/*
 .eggs/
 !figure/teaser.png
+
+# Docker
+.env
+docker-compose.override.yml

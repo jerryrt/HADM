@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  hadm-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    container_name: hadm-development
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - DETECTRON2_DATASETS=/workspace/datasets
+      - PYTHONPATH=/workspace/code
+    volumes:
+      - .:/workspace/code:cached
+      - hadm-datasets:/workspace/datasets
+      - hadm-models:/workspace/pretrained_models
+      - hadm-outputs:/workspace/outputs
+      - hadm-cache:/workspace/cache
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+    ports:
+      - "8888:8888"  # Jupyter Lab
+      - "6006:6006"  # TensorBoard
+      - "8080:8080"  # HTTP Server
+    shm_size: 8gb
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    stdin_open: true
+    tty: true
+    working_dir: /workspace/code
+    command: conda run -n hadm /bin/bash
+
+  hadm-jupyter:
+    extends: hadm-dev
+    container_name: hadm-jupyter
+    command: >
+      conda run -n hadm jupyter lab 
+      --ip=0.0.0.0 
+      --port=8888 
+      --no-browser 
+      --allow-root 
+      --NotebookApp.token='' 
+      --NotebookApp.password=''
+    ports:
+      - "8888:8888"
+
+  hadm-tensorboard:
+    extends: hadm-dev
+    container_name: hadm-tensorboard
+    command: conda run -n hadm tensorboard --logdir=/workspace/outputs --host=0.0.0.0 --port=6006
+    ports:
+      - "6006:6006"
+
+volumes:
+  hadm-datasets:
+    driver: local
+  hadm-models:
+    driver: local
+  hadm-outputs:
+    driver: local
+  hadm-cache:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
