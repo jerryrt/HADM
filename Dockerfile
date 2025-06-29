@@ -63,19 +63,15 @@ RUN --mount=type=tmpfs,target=/tmp \
     mim install mmcv-full
 
 # Copy the project source code
-COPY --chown=developer:developer . /workspace/code/
+COPY --chown=developer:developer . /workspace/
 
-# Install the project in editable mode (following README exactly) using tmpfs
-WORKDIR /workspace/code
+RUN python -m pip install -e .
 
-RUN --mount=type=tmpfs,target=/tmp \
-    python -m pip install -e .
+USER root
 
-# Set working directory back to workspace root
-WORKDIR /workspace
+RUN apt-get update && apt-get install -y libgl1 vim libglib2.0-0
+
+USER developer
 
 # Ensure conda environment is activated by default
-RUN echo "conda activate hadm" >> ~/.bashrc
-
-# Set default command
-CMD ["conda", "run", "-n", "hadm", "/bin/bash"]
+RUN conda init bash
